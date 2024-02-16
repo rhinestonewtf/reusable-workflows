@@ -84,6 +84,9 @@ jobs:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+
       - name: "Run Foundry Tests in all pnpm workspaces"
         run: "pnpm -r test"
 
