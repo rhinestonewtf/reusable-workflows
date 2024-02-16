@@ -56,7 +56,7 @@ on:
         required: false
 
 jobs:
-  forge-coverage:
+  forge-test:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
@@ -74,12 +74,7 @@ jobs:
           path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report using the unit and the integration tests"
-        run: 'forge test --match-path "${{ inputs.match-path }}" --report lcov'
-
-      - name: "Upload coverage report to Codecov"
-        uses: "codecov/codecov-action@v3"
-        with:
-          files: "./lcov.info"
+        run: 'forge test --match-path "${{ inputs.match-path }}"'
 
       - name: "Add summary"
         run: |
