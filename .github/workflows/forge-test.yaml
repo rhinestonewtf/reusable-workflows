@@ -73,7 +73,7 @@ jobs:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
-      - name: "Generate the coverage report using the unit and the integration tests"
+      - name: "Run Foundry Tests on supplied files"
         run: 'forge test --match-path "${{ inputs.match-path }}"'
 
       - name: "Add summary"
