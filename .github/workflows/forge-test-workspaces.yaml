@@ -68,7 +68,7 @@ jobs:
       - name: "Install NodeJS"
         uses: actions/setup-node@v3
         with:
-          node-version: 21
+          node-version: 20
 
       - uses: pnpm/action-setup@v3
         name: Install pnpm
@@ -76,8 +76,13 @@ jobs:
           version: 8.15
           run_install: false
 
-      - name: "Install the Node.js dependencies"
-        run: "pnpm install"
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v3"
+        with:
+          fail-on-cache-miss: true
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
 
       - name: "Run Foundry Tests in all pnpm workspaces"
         run: "pnpm -r test"
