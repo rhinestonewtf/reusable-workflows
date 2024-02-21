@@ -20,6 +20,9 @@ on:
         default: true
         required: false
         type: boolean
+      codecov-slug:
+        required: true
+        type: string
 
 jobs:
   forge-coverage:
@@ -44,6 +47,9 @@ jobs:
 
       - name: "Upload coverage report to Codecov"
         uses: "codecov/codecov-action@v3"
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ${{ inputs.codecov-slug }}
         with:
           files: "./lcov.info"
 
