@@ -50,4 +50,4 @@ jobs:
         run: "forge config"
 
       - name: "Build the production contracts"
-        run: "forge docs -b"
+        run: "forge doc -b"
