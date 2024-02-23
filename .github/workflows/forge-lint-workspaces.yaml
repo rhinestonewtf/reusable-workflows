@@ -87,7 +87,7 @@ jobs:
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 
-      - name: 'Run solhint linting in pnpm workspace: ${{ inputs.match-workspace }}';
+      - name: "Run solhint linting in pnpm workspace: ${{ inputs.match-workspace }}"
         run: 'pnpm --filter "${{ inputs.match-workspace }}" lint:sol'
 
       - name: "Add summary"

@@ -87,7 +87,7 @@ jobs:
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 
-      - name: 'Run Foundry Test in pnpm workspace: ${{ inputs.match-workspace }}';
+      - name: "Run Foundry Test in pnpm workspace: ${{ inputs.match-workspace }}"
         run: 'pnpm --filter "${{ inputs.match-workspace }}" test'
 
       - name: "Add summary"
