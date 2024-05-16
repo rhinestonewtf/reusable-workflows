@@ -23,9 +23,6 @@ jobs:
           version: 8.15
           run_install: false
 
-      - name: "Install the Node.js dependencies"
-        run: "pnpm install"
-
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v3"
@@ -33,6 +30,9 @@ jobs:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
 
       - name: "Lint the code"
         run: "pnpm lint:sol"

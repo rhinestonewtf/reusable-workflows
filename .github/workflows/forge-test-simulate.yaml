@@ -52,7 +52,7 @@ on:
         type: boolean
 
     secrets:
-      RPC_URL_MAINNET:
+      MAINNET_RPC_URL:
         required: false
 
 jobs:
@@ -65,6 +65,17 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
+      - name: "Install NodeJS"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8.15
+          run_install: false
+
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v3"
@@ -72,6 +83,9 @@ jobs:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
 
       - name: "Run Foundry Tests on supplied files"
         run: 'SIMULATE=true forge test --match-path "${{ inputs.match-path }}"'
