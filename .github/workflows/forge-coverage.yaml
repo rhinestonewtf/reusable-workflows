@@ -38,7 +38,6 @@ jobs:
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v4"
         with:
-          fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
