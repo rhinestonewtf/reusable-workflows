@@ -33,14 +33,14 @@ jobs:
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Install NodeJS"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 21
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 8.15
+          version: 9
           run_install: false
 
       - name: "Install the Node.js dependencies"
@@ -54,7 +54,7 @@ jobs:
 
       - name: "Cache the contracts and the node modules so that they can be re-used by the other jobs"
         if: ${{ inputs.save-cache }}
-        uses: "actions/cache/save@v3"
+        uses: "actions/cache/save@v4"
         with:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}

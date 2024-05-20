@@ -66,19 +66,19 @@ jobs:
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Install NodeJS"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 21
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 8.15
+          version: 9
           run_install: false
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v3"
+        uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
