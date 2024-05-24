@@ -92,6 +92,9 @@ jobs:
       - name: "Test account: Safe"
         run: 'ACCOUNT_TYPE=SAFE forge test --match-path "${{ inputs.match-path }}"'
 
+      - name: "Test account: Kernel"
+        run: 'ACCOUNT_TYPE=KERNEL forge test --match-path "${{ inputs.match-path }}"'
+
       - name: "Add summary"
         run: |
           echo "## Coverage result" >> $GITHUB_STEP_SUMMARY
