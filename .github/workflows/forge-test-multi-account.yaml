@@ -88,12 +88,18 @@ jobs:
 
       - name: "Test account: default"
         run: 'ACCOUNT_TYPE=DEFAULT forge test --match-path "${{ inputs.match-path }}"'
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
 
       - name: "Test account: Safe"
         run: 'ACCOUNT_TYPE=SAFE forge test --match-path "${{ inputs.match-path }}"'
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
 
       - name: "Test account: Kernel"
         run: 'ACCOUNT_TYPE=KERNEL forge test --match-path "${{ inputs.match-path }}"'
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
 
       - name: "Add summary"
         run: |
