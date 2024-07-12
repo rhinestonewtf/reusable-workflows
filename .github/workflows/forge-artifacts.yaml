@@ -36,7 +36,7 @@ jobs:
           name: "contract-artifacts"
           path: "artifacts"
 
-      - name: Commit and push changes
+      - name: "Push Artifacts to repo"
         uses: devops-infra/action-commit-push@master
         with:
           github_token: ${{ secrets.CI_TOKEN }}
