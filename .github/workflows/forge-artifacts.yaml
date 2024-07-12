@@ -1,0 +1,101 @@
+name: "Prepare Artifacts"
+
+on:
+  workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      foundry-fuzz-runs:
+        default: 1000
+        required: false
+        type: "number"
+
+      foundry-invariant-depth:
+        default: 20
+        required: false
+        type: "number"
+
+      foundry-invariant-runs:
+        default: 20
+        required: false
+        type: "number"
+
+      foundry-profile:
+        default: "default"
+        required: false
+        type: "string"
+
+      fuzz-seed:
+        default: false
+        required: false
+        type: boolean
+
+      match-path:
+        required: true
+        type: "string"
+
+      name:
+        default: "Forge"
+        required: false
+        type: "string"
+
+      restore-cache:
+        default: true
+        required: false
+        type: boolean
+
+      store-artifacts:
+        default: true
+        required: false
+        type: boolean
+
+    secrets:
+      MAINNET_RPC_URL:
+        required: false
+
+jobs:
+  forge-artifacts:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install Foundry"
+        uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Install NodeJS"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9.0.6
+          run_install: false
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+
+      - name: "Prepare the contract artifacts"
+        if: ${{ inputs.store-artifacts }}
+        run: "./shell/prepare-artifacts.sh"
+
+      - name: "Store the contract artifacts in CI"
+        if: ${{ inputs.store-artifacts }}
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "contract-artifacts"
+          path: "artifacts"
+
+      - name: "Add summary"
+        run: |
+          echo "## Build result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
