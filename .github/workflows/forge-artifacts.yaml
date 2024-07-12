@@ -4,13 +4,12 @@ on:
   workflow_call:
 
 jobs:
-  permissions:
-  # Give the default GITHUB_TOKEN write permission to commit and push the
-  # added or changed files to the repository.
-  contents: write
-
   forge-artifacts:
     runs-on: "ubuntu-latest"
+    permissions:
+    # Give the default GITHUB_TOKEN write permission to commit and push the
+    # added or changed files to the repository.
+    contents: write
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
