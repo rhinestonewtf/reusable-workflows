@@ -39,7 +39,7 @@ jobs:
       - name: Commit and push changes
         uses: devops-infra/action-commit-push@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CI_TOKEN }}
           commit_prefix: "[AUTO-COMMIT] contract artifacts"
 
       - name: "Add summary"
