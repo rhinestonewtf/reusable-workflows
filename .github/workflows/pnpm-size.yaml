@@ -1,16 +1,30 @@
-name: "Size check an sdk"
+name: "Size check with pnpm"
 
 on:
   workflow_call:
 
 jobs:
-  size:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
         with:
-          version: 8
-          run_install: true
-      - name: Check size
+          version: 9
+          run_install: false
+
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v4"
+        with:
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+
+      - name: Size check
         run: pnpm size
