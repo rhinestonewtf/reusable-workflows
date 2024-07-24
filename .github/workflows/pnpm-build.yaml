@@ -8,9 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
           run_install: true
+
       - name: Run build
         run: pnpm build
+
+      - name: "Cache the build and the node modules so that they can be re-used by the other jobs"
+        if: ${{ inputs.save-cache }}
+        uses: "actions/cache/save@v4"
+        with:
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
