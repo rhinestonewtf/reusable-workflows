@@ -101,6 +101,11 @@ jobs:
         env:
           MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
 
+      - name: "Test account: NEXUS"
+        run: 'ACCOUNT_TYPE=NEXUS forge test --match-path "${{ inputs.match-path }}"'
+        env:
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+
       - name: "Add summary"
         run: |
           echo "## Coverage result" >> $GITHUB_STEP_SUMMARY
