@@ -54,6 +54,8 @@ on:
     secrets:
       MAINNET_RPC_URL:
         required: false
+      TESTNET_RPC_URL:
+        required: false
 
 jobs:
   forge-test:
@@ -90,6 +92,7 @@ jobs:
         run: 'SIMULATE=true forge test --match-path "${{ inputs.match-path }}"'
         env:
           MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+          TESTNET_RPC_URL: ${{ secrets.TESTNET_RPC_URL }}
 
       - name: "Add summary"
         run: |
