@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Check if a contract name is provided
 if [ $# -eq 0 ]; then
     echo "Please provide a contract name as an argument."
