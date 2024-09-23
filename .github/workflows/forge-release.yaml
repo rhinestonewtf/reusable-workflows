@@ -1,0 +1,46 @@
+name: "Release Artifacts"
+on:
+  workflow_call:
+    inputs:
+      store-artifacts:
+        default: true
+        required: false
+        type: boolean
+      contract-name:
+        required: true
+        type: string
+        description: "Name of the contract file to build and verify"
+jobs:
+  forge-build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+      - name: "Install Foundry"
+        uses: "foundry-rs/foundry-toolchain@v1"
+      - name: "Install NodeJS"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9.0.6
+          run_install: false
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+      - name: "Show the Forge config"
+        run: "forge config"
+      - name: "Build Artifacts"
+        run: |
+          ./release.sh ${{ inputs.contract-name }}
+      - name: "Upload artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.contract-name }}-artifacts
+          path: artifacts
+      - name: "Add summary"
+        run: |
+          echo "## Build result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "Contract: ${{ inputs.contract-name }}" >> $GITHUB_STEP_SUMMARY
