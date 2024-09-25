@@ -38,7 +38,7 @@ jobs:
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.contract-name }}-artifacts
+          name: ${{ inputs.contract-name }}
           path: artifacts
       - name: "Add summary"
         run: |
