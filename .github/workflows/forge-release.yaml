@@ -18,6 +18,11 @@ on:
           out-optimized
         required: false
         type: "string"
+
+      restore-cache:
+        default: true
+        required: false
+        type: "boolean"
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
@@ -34,7 +39,15 @@ jobs:
         with:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
-          path: ${{ inputs.cache-path }}
+          path: node_modules
+
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v4"
+        with:
+          fail-on-cache-miss: true
+          key: "build-and-modules-${{ github.sha }}"
+          path: out
       - name: "Show the Forge config"
         run: "forge config"
       - name: "Build Artifacts"
