@@ -10,6 +10,14 @@ on:
         required: true
         type: string
         description: "Name of the contract file to build and verify"
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
