@@ -24,19 +24,17 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
+
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
-      - name: "Install NodeJS"
-        uses: actions/setup-node@v4
+
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v4"
         with:
-          node-version: 18
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9.0.6
-          run_install: false
-      - name: "Install the Node.js dependencies"
-        run: "pnpm install"
+          fail-on-cache-miss: true
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
       - name: "Show the Forge config"
         run: "forge config"
       - name: "Build Artifacts"
