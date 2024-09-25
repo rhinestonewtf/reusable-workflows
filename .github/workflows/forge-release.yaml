@@ -49,5 +49,5 @@ jobs:
       - name: "Add summary"
         run: |
           echo "## Build result" >> $GITHUB_STEP_SUMMARY
+          echo "🏗️Contract: ${{ inputs.contract-name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
-          echo "Contract: ${{ inputs.contract-name }}" >> $GITHUB_STEP_SUMMARY

@@ -17,11 +17,6 @@ on:
         required: false
         type: boolean
 
-      store-artifacts:
-        default: true
-        required: false
-        type: boolean
-
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
@@ -52,12 +47,19 @@ jobs:
       - name: "Build the production contracts"
         run: "forge build"
 
+      - name: "Cache node__odules"
+        if: ${{ inputs.save-cache }}
+        uses: "actions/cache/save@v4"
+        with:
+          key: "build-and-modules-${{ github.sha }}"
+          path: node_modules
+
       - name: "Cache the contracts and the node modules so that they can be re-used by the other jobs"
         if: ${{ inputs.save-cache }}
         uses: "actions/cache/save@v4"
         with:
           key: "build-and-modules-${{ github.sha }}"
-          path: ${{ inputs.cache-path }}
+          path: out
 
       - name: "Add summary"
         run: |
