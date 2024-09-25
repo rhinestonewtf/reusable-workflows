@@ -33,7 +33,8 @@ jobs:
         run: "forge config"
       - name: "Build Artifacts"
         run: |
-          ./release.sh ${{ inputs.contract-name }}
+          chmod +x ./build-artifacts.sh
+          ./build-artifacts.sh ${{ inputs.contract-name }}
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v3
         with:
