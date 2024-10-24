@@ -51,6 +51,21 @@ on:
         required: false
         type: boolean
 
+      foundry-gas-limit:
+        default: "18446744073709551615"
+        required: false
+        type: "string"
+
+      foundry-memory-limit:
+        default: 2147483648
+        required: false
+        type: "number"
+
+      foundry-verbosity:
+        default: 3
+        required: false
+        type: "number"
+
     secrets:
       MAINNET_RPC_URL:
         required: false
