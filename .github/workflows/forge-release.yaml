@@ -64,3 +64,5 @@ jobs:
           echo "## Build result" >> $GITHUB_STEP_SUMMARY
           echo "🏗️Contract: ${{ inputs.contract-name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifact Link" >> $GITHUB_STEP_SUMMARY
+          echo "Download artifacts: ${{ steps.upload-artifact.outputs.artifact-url }}" >> $GITHUB_STEP_SUMMARY
