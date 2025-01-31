@@ -32,6 +32,8 @@ jobs:
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
+        with:
+          version: stable
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
