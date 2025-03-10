@@ -32,7 +32,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1.2.0"
+        uses: "foundry-rs/foundry-toolchain@v1.3.1"
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
