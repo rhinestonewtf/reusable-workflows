@@ -43,9 +43,6 @@ jobs:
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 
-      - name: "forge version"
-        run: "forge --version"
-
       - name: "Show the Forge config"
         run: "forge config"
 
