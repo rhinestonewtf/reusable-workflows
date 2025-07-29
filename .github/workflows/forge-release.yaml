@@ -6,10 +6,10 @@ on:
         default: true
         required: false
         type: boolean
-      contract-name:
+      contract-path:
         required: true
         type: string
-        description: "Name of the contract file to build and verify"
+        description: "Path to the contract file to build and verify (e.g., src/MyContract/MyContract)"
       cache-path:
         default: |
           cache
@@ -18,7 +18,6 @@ on:
           out-optimized
         required: false
         type: "string"
-
       restore-cache:
         default: true
         required: false
@@ -29,12 +28,10 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
-
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
         with:
           version: stable
-
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v4"
@@ -42,7 +39,6 @@ jobs:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
           path: node_modules
-
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v4"
@@ -52,19 +48,25 @@ jobs:
           path: out
       - name: "Show the Forge config"
         run: "forge config"
+      - name: "Extract contract name"
+        id: extract-name
+        run: |
+          # Extract just the contract name from the path
+          CONTRACT_NAME=$(basename "${{ inputs.contract-path }}")
+          echo "contract-name=$CONTRACT_NAME" >> $GITHUB_OUTPUT
       - name: "Build Artifacts"
         run: |
           chmod +x ./build-artifacts.sh
-          ./build-artifacts.sh ${{ inputs.contract-name }}
+          ./build-artifacts.sh ${{ inputs.contract-path }}
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.contract-name }}
+          name: ${{ steps.extract-name.outputs.contract-name }}
           path: artifacts
       - name: "Add summary"
         run: |
           echo "## Build result" >> $GITHUB_STEP_SUMMARY
-          echo "🏗️Contract: ${{ inputs.contract-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "🏗️Contract: ${{ steps.extract-name.outputs.contract-name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
           echo "## Artifact Link" >> $GITHUB_STEP_SUMMARY
           echo "Download artifacts: ${{ steps.upload-artifact.outputs.artifact-url }}" >> $GITHUB_STEP_SUMMARY
