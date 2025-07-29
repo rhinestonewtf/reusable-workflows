@@ -43,8 +43,8 @@ jobs:
       - name: "Configure git for private repos"
         if: ${{ github.event.repository.private }}
         run: |
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "git@github.com:"
+          git config --global url."https://${{ github.token }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://${{ github.token }}}@github.com/".insteadOf "git@github.com:"
 
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
