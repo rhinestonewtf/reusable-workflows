@@ -18,7 +18,7 @@ on:
         type: boolean
 
     secrets:
-      DEPLOY_KEY:
+      DEPLOY_KEYS:
         required: false
 
 jobs:
@@ -28,21 +28,36 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
-      - name: Set up SSH key for private dependencies
+      - name: Set up SSH keys for private dependencies
         run: |
-          if [ -n "${DEPLOY_KEY}" ]; then
-            echo "SSH key found, setting up..."
-            echo "$DEPLOY_KEY" | tr -d '\r' | sed 's/\\n/\n/g' > id_rsa
+          if [ -n "${DEPLOY_KEYS}" ]; then
+            echo "SSH keys found, setting up..."
+
+            echo "$DEPLOY_KEYS" > id_rsa
             chmod 600 id_rsa
+
             eval "$(ssh-agent -s)"
-            ssh-add id_rsa
+            ssh-add id_rsa || true
+
+            awk '/^-----BEGIN OPENSSH PRIVATE KEY-----/ {
+                file = "key_" ++count
+            }
+            { print > file }
+            END {
+                for (i = 1; i <= count; i++) {
+                    system("chmod 600 key_" i)
+                    system("ssh-add key_" i)
+                }
+            }' id_rsa
+
             mkdir -p ~/.ssh
             ssh-keyscan github.com >> ~/.ssh/known_hosts
           else
-            echo "No SSH key provided. Skipping."
+            echo "No SSH keys provided. Skipping."
           fi
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
+
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
