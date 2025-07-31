@@ -2,6 +2,24 @@ name: "Test with pnpm"
 
 on:
   workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      restore-cache:
+        default: true
+        required: false
+        type: boolean
+
+    secrets:
+      DEPLOY_KEYS:
+        required: false
 
 jobs:
   test:
@@ -10,11 +28,19 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
+      - name: "Setup SSH keys for private dependencies"
+        uses: ./.github/actions/setup-ssh-keys
+        with:
+          deploy-keys: ${{ secrets.DEPLOY_KEYS }}
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
           version: 9
           run_install: false
+
+      - name: "Disable pnpm strict version check"
+        run: pnpm config set package-manager-strict false
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}

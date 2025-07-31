@@ -1,6 +1,25 @@
 name: "Lint a Forge project"
 
-on: "workflow_call"
+on:
+  workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      save-cache:
+        default: true
+        required: false
+        type: boolean
+
+    secrets:
+      DEPLOY_KEYS:
+        required: false
 
 jobs:
   forge-lint:
@@ -9,29 +28,21 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
-      - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1.2.0"
+      - name: "Setup SSH keys for private dependencies"
+        uses: ./.github/actions/setup-ssh-keys
         with:
-          version: stable
+          deploy-keys: ${{ secrets.DEPLOY_KEYS }}
 
-      - name: "Install NodeJS"
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9.0.6
-          run_install: false
+      - name: "Setup Forge development environment"
+        uses: ./.github/actions/setup-forge-env
 
       - name: "Restore the cached build and the node modules"
-        if: ${{ inputs.restore-cache }}
+        if: ${{ inputs.save-cache }}
         uses: "actions/cache/restore@v4"
         with:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
-
+          
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 

@@ -2,6 +2,9 @@ name: "Prepare Artifacts"
 
 on:
   workflow_call:
+    secrets:
+      DEPLOY_KEYS:
+        required: false
 
 jobs:
   forge-artifacts:
@@ -9,6 +12,11 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
+
+      - name: "Setup SSH keys for private dependencies"
+        uses: ./.github/actions/setup-ssh-keys
+        with:
+          deploy-keys: ${{ secrets.DEPLOY_KEYS }}
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
@@ -26,6 +34,9 @@ jobs:
           version: 9.0.6
           run_install: false
 
+      - name: "Disable pnpm strict version check"
+        run: pnpm config set package-manager-strict false
+
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 
@@ -33,6 +44,7 @@ jobs:
         run: "./shell/prepare-artifacts.sh"
 
       - name: "Store the contract artifacts in CI"
+        id: upload-artifact
         uses: "actions/upload-artifact@v4"
         with:
           name: "contract-artifacts"
