@@ -66,6 +66,12 @@ jobs:
         env:
           DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
 
+      - name: Debug SSH access
+        run: |
+          ssh -T git@github.com || true
+          ssh -T git@github.com:rhinestonewtf/compact-utils || true
+          ssh -T git@github.com:rhinestonewtf/eip712.rs || true
+
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
         with:
