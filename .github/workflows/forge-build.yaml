@@ -50,6 +50,15 @@ jobs:
                 }
             }' all_keys
 
+            {
+              echo "Host github.com"
+              echo "  IdentitiesOnly yes"
+              for key in key_*; do
+                echo "  IdentityFile $(pwd)/$key"
+              done
+            } >> ~/.ssh/config
+            chmod 600 ~/.ssh/config
+
             echo "Keys loaded in SSH agent:"
             ssh-add -l
 
