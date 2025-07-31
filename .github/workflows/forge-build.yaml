@@ -73,12 +73,6 @@ jobs:
         env:
           DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
 
-      - name: Debug SSH access
-        run: |
-          ssh -T git@github.com || true
-          git ls-remote git@github.com:rhinestonewtf/compact-utils.git || true
-          git ls-remote git@github.com:rhinestonewtf/eip712.rs.git || true
-
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
         with:
@@ -94,6 +88,9 @@ jobs:
         with:
           version: 9.0.6
           run_install: false
+
+      - name: "Disable pnpm strict version check"
+        run: pnpm config set package-manager-strict false
 
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
