@@ -32,13 +32,12 @@ jobs:
         run: |
           if [ -n "${DEPLOY_KEYS}" ]; then
             echo "SSH keys found, setting up..."
+            echo "$DEPLOY_KEYS" | tr -d '\r' | sed 's/\\n/\n/g' > all_keys
 
-            echo "$DEPLOY_KEYS" > id_rsa
-            chmod 600 id_rsa
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
 
-            eval "$(ssh-agent -s)"
-            ssh-add id_rsa || true
-
+            count=0
             awk '/^-----BEGIN OPENSSH PRIVATE KEY-----/ {
                 file = "key_" ++count
             }
@@ -46,19 +45,26 @@ jobs:
             END {
                 for (i = 1; i <= count; i++) {
                     system("chmod 600 key_" i)
-                    system("ssh-add key_" i)
                 }
-            }' id_rsa
+            }' all_keys
 
-            mkdir -p ~/.ssh
+            {
+              echo "Host github.com"
+              echo "  IdentitiesOnly yes"
+              for key in key_*; do
+                echo "  IdentityFile $(pwd)/$key"
+              done
+            } >> ~/.ssh/config
+            chmod 600 ~/.ssh/config
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-            echo "GIT_SSH_COMMAND=\"ssh -i $(pwd)/id_rsa -o IdentitiesOnly=yes\"" >> $GITHUB_ENV
+            chmod 644 ~/.ssh/known_hosts
+
+            echo "SSH keys configured for github.com"
           else
-            echo "No SSH keys provided. Skipping."
+            echo "No SSH key provided. Skipping."
           fi
         env:
           DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
-
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
