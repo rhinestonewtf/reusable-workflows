@@ -69,8 +69,8 @@ jobs:
       - name: Debug SSH access
         run: |
           ssh -T git@github.com || true
-          ssh -T git@github.com:rhinestonewtf/compact-utils || true
-          ssh -T git@github.com:rhinestonewtf/eip712.rs || true
+          git ls-remote git@github.com:rhinestonewtf/compact-utils.git || true
+          git ls-remote git@github.com:rhinestonewtf/eip712.rs.git || true
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
