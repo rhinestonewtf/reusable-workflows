@@ -31,14 +31,14 @@ jobs:
       - name: Set up SSH keys for private dependencies
         run: |
           if [ -n "${DEPLOY_KEYS}" ]; then
-            echo "SSH keys found, setting up..."
+            echo "Setting up SSH agent..."
             echo "$DEPLOY_KEYS" | tr -d '\r' | sed 's/\\n/\n/g' > all_keys
 
             mkdir -p ~/.ssh
             chmod 700 ~/.ssh
 
             eval "$(ssh-agent -s)"
-            count=0
+
             awk '/^-----BEGIN OPENSSH PRIVATE KEY-----/ {
                 file = "key_" ++count
             }
@@ -50,13 +50,16 @@ jobs:
                 }
             }' all_keys
 
+            echo "Keys loaded in SSH agent:"
+            ssh-add -l
+
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
 
-            echo "SSH keys loaded into ssh-agent:"
-            ssh-add -l
+            echo "Testing SSH connection to GitHub:"
+            ssh -T git@github.com || true
           else
-            echo "No SSH key provided. Skipping."
+            echo "No SSH keys provided."
           fi
         env:
           DEPLOY_KEYS: ${{ secrets.DEPLOY_KEYS }}
