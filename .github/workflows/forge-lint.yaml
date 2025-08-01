@@ -29,12 +29,12 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Setup SSH keys for private dependencies"
-        uses: ./.github/actions/setup-ssh-keys
+        uses: rhinestonewtf/reusable-workflows/.github/actions/setup-ssh-keys@main
         with:
           deploy-keys: ${{ secrets.DEPLOY_KEYS }}
 
       - name: "Setup Forge development environment"
-        uses: ./.github/actions/setup-forge-env
+        uses: rhinestonewtf/reusable-workflows/.github/actions/setup-forge-env@main
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.save-cache }}
