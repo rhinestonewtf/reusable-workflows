@@ -1,0 +1,54 @@
+name: 'Setup SSH Keys for Private Dependencies'
+description: 'Sets up SSH agent and keys for accessing private GitHub repositories'
+
+inputs:
+  deploy-keys:
+    description: 'Private SSH keys for repository access'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up SSH keys for private dependencies
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.deploy-keys }}" ]; then
+          echo "Setting up SSH agent..."
+          echo "${{ inputs.deploy-keys }}" | tr -d '\r' | sed 's/\\n/\n/g' > all_keys
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          eval "$(ssh-agent -s)"
+
+          awk '/^-----BEGIN OPENSSH PRIVATE KEY-----/ {
+              file = "key_" ++count
+          }
+          { print > file }
+          END {
+              for (i = 1; i <= count; i++) {
+                  system("chmod 600 key_" i)
+                  system("ssh-add key_" i)
+              }
+          }' all_keys
+
+          {
+            echo "Host github.com"
+            echo "  IdentitiesOnly yes"
+            for key in key_*; do
+              echo "  IdentityFile $(pwd)/$key"
+            done
+          } >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
+          echo "Keys loaded in SSH agent:"
+          ssh-add -l
+
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          echo "Testing SSH connection to GitHub:"
+          ssh -T git@github.com || true
+        else
+          echo "No SSH keys provided."
+        fi

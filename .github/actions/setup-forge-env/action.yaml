@@ -1,0 +1,41 @@
+name: 'Setup Forge Development Environment'
+description: 'Sets up Foundry, Node.js, and pnpm for Forge projects'
+
+inputs:
+  node-version:
+    description: 'Node.js version to install'
+    required: false
+    default: '18'
+  
+  pnpm-version:
+    description: 'pnpm version to install'
+    required: false
+    default: '9.0.6'
+  
+  foundry-version:
+    description: 'Foundry version to install'
+    required: false
+    default: 'stable'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: "Install Foundry"
+      uses: "foundry-rs/foundry-toolchain@v1.2.0"
+      with:
+        version: ${{ inputs.foundry-version }}
+
+    - name: "Install NodeJS"
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+        run_install: false
+
+    - name: "Disable pnpm strict version check"
+      shell: bash
+      run: pnpm config set package-manager-strict false
