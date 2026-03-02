@@ -81,10 +81,10 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
-      - name: "Setup SSH keys for private dependencies"
-        uses: rhinestonewtf/reusable-workflows/.github/actions/setup-ssh-keys@main
+      - name: "Setup github access for private dependencies"
+        uses: rhinestonewtf/reusable-workflows/.github/actions/setup-gh-access@main
         with:
-          deploy-keys: ${{ secrets.DEPLOY_KEYS }}
+          gh-token: ${{ secrets.GH_TOKEN }}
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"

@@ -1,0 +1,17 @@
+name: 'Setup GitHub Access for Private Dependencies'
+description: 'Sets up github for accessing private GitHub repositories'
+
+inputs:
+  gh-token:
+    description: 'GitHub token for repository access'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up GitHub token for private dependencies
+      shell: bash
+      run: |
+          git config --global url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
+          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
