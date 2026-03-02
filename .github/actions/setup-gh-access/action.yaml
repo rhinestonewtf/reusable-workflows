@@ -15,3 +15,4 @@ runs:
           git config --global url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
           git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
           git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "git+ssh://git@github.com/"
