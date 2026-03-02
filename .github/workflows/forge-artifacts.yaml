@@ -3,7 +3,7 @@ name: "Prepare Artifacts"
 on:
   workflow_call:
     secrets:
-      DEPLOY_KEYS:
+      GH_TOKEN:
         required: false
 
 jobs:
