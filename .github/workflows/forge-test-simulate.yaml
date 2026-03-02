@@ -71,7 +71,7 @@ on:
         required: false
       TESTNET_RPC_URL:
         required: false
-      DEPLOY_KEYS:
+      GH_TOKEN:
         required: false
 
 jobs:
