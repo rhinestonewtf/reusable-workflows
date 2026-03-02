@@ -18,7 +18,7 @@ on:
         type: boolean
 
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         required: false
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
           git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
           git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
