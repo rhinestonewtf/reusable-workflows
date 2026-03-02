@@ -18,7 +18,7 @@ on:
         type: boolean
 
     secrets:
-      DEPLOY_KEYS:
+      GITHUB_TOKEN:
         required: false
 
 jobs:
