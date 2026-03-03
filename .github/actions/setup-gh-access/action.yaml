@@ -18,6 +18,7 @@ runs:
       with:
         app-id: ${{ inputs.app_id }}
         private-key: ${{ inputs.app_private_key }}
+        owner: rhinestonewtf
 
     - name: Set up GitHub token for private dependencies
       shell: bash
