@@ -2,17 +2,27 @@ name: 'Setup GitHub Access for Private Dependencies'
 description: 'Sets up github for accessing private GitHub repositories'
 
 inputs:
-  gh-token:
-    description: 'GitHub token for repository access'
-    required: false
+  app_id:
+    description: 'GitHub App ID'
+    required: true
+  app_private_key:
+    description: 'GitHub App private key'
+    required: true
 
 runs:
   using: 'composite'
   steps:
+    - name: Generate GitHub App token
+      id: app-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ inputs.app_id }}
+        private-key: ${{ inputs.app_private_key }}
+
     - name: Set up GitHub token for private dependencies
       shell: bash
       run: |
-          git config --global url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
-          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
-          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          git config --global --add url."https://${{ inputs.gh-token }}:x-oauth-basic@github.com/".insteadOf "git+ssh://git@github.com/"
+          git config --global url."https://${{ steps.app-token.outputs.token }}:x-oauth-basic@github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://${{ steps.app-token.outputs.token }}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
+          git config --global --add url."https://${{ steps.app-token.outputs.token }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          git config --global --add url."https://${{ steps.app-token.outputs.token }}:x-oauth-basic@github.com/".insteadOf "git+ssh://git@github.com/"

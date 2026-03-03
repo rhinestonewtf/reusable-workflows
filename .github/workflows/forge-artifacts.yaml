@@ -3,8 +3,10 @@ name: "Prepare Artifacts"
 on:
   workflow_call:
     secrets:
-      GH_TOKEN:
-        required: false
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
 
 jobs:
   forge-artifacts:
@@ -16,7 +18,8 @@ jobs:
       - name: "Setup github access for private dependencies"
         uses: rhinestonewtf/reusable-workflows/.github/actions/setup-gh-access@main
         with:
-          gh-token: ${{ secrets.GH_TOKEN }}
+          app_id: ${{ secrets.APP_ID }}
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1.2.0"
