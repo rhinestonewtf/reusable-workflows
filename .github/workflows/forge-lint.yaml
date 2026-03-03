@@ -18,8 +18,10 @@ on:
         type: boolean
 
     secrets:
-      GH_TOKEN:
-        required: false
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
 
 jobs:
   forge-lint:
@@ -31,7 +33,8 @@ jobs:
       - name: "Setup github access for private dependencies"
         uses: rhinestonewtf/reusable-workflows/.github/actions/setup-gh-access@main
         with:
-          gh-token: ${{ secrets.GH_TOKEN }}
+          app_id: ${{ secrets.APP_ID }}
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: "Setup Forge development environment"
         uses: rhinestonewtf/reusable-workflows/.github/actions/setup-forge-env@main
