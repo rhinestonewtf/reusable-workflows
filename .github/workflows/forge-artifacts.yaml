@@ -13,7 +13,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: "Setup github access for private dependencies"
         uses: rhinestonewtf/reusable-workflows/.github/actions/setup-gh-access@main
@@ -22,16 +22,16 @@ jobs:
           app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1.2.0"
+        uses: foundry-rs/foundry-toolchain@c7450ba673e133f5ee30098b3b54f444d3a2ca2d # v1.8.0
         with:
           version: stable
 
       - name: "Install NodeJS"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 18
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         name: Install pnpm
         with:
           version: 9.0.6
@@ -48,13 +48,13 @@ jobs:
 
       - name: "Store the contract artifacts in CI"
         id: upload-artifact
-        uses: "actions/upload-artifact@v4"
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: "contract-artifacts"
           path: "artifacts"
 
       - name: "Push Artifacts to repo"
-        uses: devops-infra/action-commit-push@master
+        uses: devops-infra/action-commit-push@f066ea8e19660de57d3d3a4a0b9d294ea2612e20 # v1.5.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           commit_prefix: "[AUTO-COMMIT] contract artifacts"
