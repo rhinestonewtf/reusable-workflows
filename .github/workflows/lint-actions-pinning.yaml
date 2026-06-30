@@ -1,0 +1,31 @@
+name: Lint Actions pinning
+
+# Fails a PR if any third-party GitHub Action / reusable workflow is referenced by a
+# mutable tag or branch instead of a full commit SHA. Our own org's actions
+# (rhinestonewtf/*) are intentionally excluded via .pinact.yaml.
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+      - ".pinact.yaml"
+
+permissions:
+  contents: read
+
+jobs:
+  pinact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Install pinact
+        env:
+          PINACT_VERSION: v4.1.0
+        run: |
+          curl -fsSL -o /tmp/pinact.tar.gz \
+            "https://github.com/suzuki-shunsuke/pinact/releases/download/${PINACT_VERSION}/pinact_linux_amd64.tar.gz"
+          sudo tar -C /usr/local/bin -xzf /tmp/pinact.tar.gz pinact
+          pinact --version
+      - name: Verify all third-party actions are SHA-pinned
+        run: pinact run -fix=false --no-api

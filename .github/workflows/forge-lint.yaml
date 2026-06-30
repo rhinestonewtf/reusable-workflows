@@ -28,7 +28,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: "Setup github access for private dependencies"
         uses: rhinestonewtf/reusable-workflows/.github/actions/setup-gh-access@main
@@ -41,7 +41,7 @@ jobs:
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.save-cache }}
-        uses: "actions/cache/restore@v4"
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}

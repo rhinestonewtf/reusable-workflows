@@ -7,9 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 9
           run_install: true
@@ -19,7 +19,7 @@ jobs:
 
       - name: "Cache the build and the node modules so that they can be re-used by the other jobs"
         if: ${{ inputs.save-cache }}
-        uses: "actions/cache/save@v4"
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
